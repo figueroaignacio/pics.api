@@ -30,9 +30,7 @@ class PhotoRepository:
         self._session = session
 
     async def get_by_id(self, photo_id: uuid.UUID) -> Photo | None:
-        result = await self._session.execute(
-            select(Photo).where(Photo.id == photo_id)
-        )
+        result = await self._session.execute(select(Photo).where(Photo.id == photo_id))
         return result.scalar_one_or_none()
 
     async def get_all(

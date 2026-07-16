@@ -6,7 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import CategoryNotFoundError, PhotoNotFoundError
 from app.core.logging import get_logger
 from app.repositories.category_repository import CategoryRepository
-from app.repositories.photo_repository import PhotoFilters, PhotoPagination, PhotoRepository
+from app.repositories.photo_repository import (
+    PhotoFilters,
+    PhotoPagination,
+    PhotoRepository,
+)
 from app.schemas.photo import (
     PhotoCreate,
     PhotoListResponse,

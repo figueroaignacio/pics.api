@@ -19,7 +19,9 @@ class Photo(Base):
     )
     title: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    r2_object_key: Mapped[str] = mapped_column(String(1024), nullable=False, unique=True)
+    r2_object_key: Mapped[str] = mapped_column(
+        String(1024), nullable=False, unique=True
+    )
     image_url: Mapped[str] = mapped_column(String(2048), nullable=False)
     category_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -28,7 +30,9 @@ class Photo(Base):
         index=True,
     )
     spotify_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
-    taken_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    taken_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     location: Mapped[str | None] = mapped_column(String(255), nullable=True)
     favorite: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(
@@ -43,7 +47,7 @@ class Photo(Base):
         onupdate=func.now(),
     )
 
-    category: Mapped["app.models.category.Category"] = relationship(  # type: ignore[name-defined]
+    category: Mapped["app.models.category.Category"] = relationship(  # type: ignore[name-defined]  # noqa: F821
         "Category",
         lazy="selectin",
     )

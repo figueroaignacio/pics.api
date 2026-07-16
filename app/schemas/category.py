@@ -26,7 +26,7 @@ class CategoryCreate(_CategoryBase):
         default=None,
         min_length=1,
         max_length=100,
-        description="URL-safe slug. Auto-generated from 'name' if omitted. Must be unique.",
+        description="URL-safe slug. Auto-generated from 'name' if omitted. Must be unique.",  # noqa: E501
         examples=["friends"],
     )
     description: str | None = Field(
@@ -62,7 +62,7 @@ class CategoryUpdate(_CategoryBase):
         default=None,
         min_length=1,
         max_length=100,
-        description="New slug. If omitted when 'name' is provided, slug is regenerated.",
+        description="New slug. If omitted when 'name' is provided, slug is regenerated.",  # noqa: E501
         examples=["best-friends"],
     )
     description: str | None = Field(

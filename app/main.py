@@ -14,15 +14,12 @@ from app.core.config import settings
 from app.core.exceptions import AppException
 from app.core.logging import configure_logging, get_logger
 
-# ---------------------------------------------------------------------------
 # Bootstrap logging before anything else
-# ---------------------------------------------------------------------------
+
 configure_logging()
 logger = get_logger(__name__)
 
-# ---------------------------------------------------------------------------
 # Lifespan
-# ---------------------------------------------------------------------------
 
 
 @asynccontextmanager
@@ -38,18 +35,17 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Shutting down %s", settings.APP_NAME)
 
 
-# ---------------------------------------------------------------------------
 # Application factory
-# ---------------------------------------------------------------------------
 
 
 def create_application() -> FastAPI:
+    """Create a FastAPI application instance with all configurations."""
     application = FastAPI(
         title=settings.APP_NAME,
         version=settings.APP_VERSION,
         description=(
             "A production-ready REST API for managing a personal photography gallery. "
-            "Photos are stored as metadata only — images are hosted on Cloudflare Images."
+            "Photos are stored as metadata only — images are hosted on Cloudflare Images."  # noqa: E501
         ),
         openapi_tags=[
             {
@@ -66,9 +62,7 @@ def create_application() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # -----------------------------------------------------------------------
     # CORS
-    # -----------------------------------------------------------------------
     application.add_middleware(
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
@@ -77,9 +71,7 @@ def create_application() -> FastAPI:
         allow_headers=settings.CORS_ALLOW_HEADERS,
     )
 
-    # -----------------------------------------------------------------------
     # Request logging middleware
-    # -----------------------------------------------------------------------
     @application.middleware("http")
     async def log_requests(request: Request, call_next):
         start = time.perf_counter()
@@ -94,12 +86,12 @@ def create_application() -> FastAPI:
         )
         return response
 
-    # -----------------------------------------------------------------------
     # Exception handlers
-    # -----------------------------------------------------------------------
 
     @application.exception_handler(AppException)
-    async def app_exception_handler(request: Request, exc: AppException) -> JSONResponse:
+    async def app_exception_handler(
+        request: Request, exc: AppException
+    ) -> JSONResponse:
         logger.warning(
             "AppException [%d]: %s (path=%s)",
             exc.status_code,
@@ -128,7 +120,7 @@ def create_application() -> FastAPI:
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={
                 "success": False,
-                "message": "Validation failed. Please check the request body or query parameters.",
+                "message": "Validation failed. Please check the request body or query parameters.",  # noqa: E501
                 "errors": errors,
             },
         )
@@ -152,9 +144,7 @@ def create_application() -> FastAPI:
             },
         )
 
-    # -----------------------------------------------------------------------
     # Routes
-    # -----------------------------------------------------------------------
     application.include_router(api_router)
 
     return application

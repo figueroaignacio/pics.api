@@ -18,7 +18,9 @@ class Category(Base):
         server_default=func.gen_random_uuid(),
     )
     name: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
-    slug: Mapped[str] = mapped_column(String(100), nullable=False, unique=True, index=True)
+    slug: Mapped[str] = mapped_column(
+        String(100), nullable=False, unique=True, index=True
+    )  # noqa: E501
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
