@@ -2,19 +2,26 @@ from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.db.engine import engine
+from app.db.engine import get_engine
 
-AsyncSessionLocal: async_sessionmaker[AsyncSession] = async_sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False,
-    autocommit=False,
-    autoflush=False,
-)
+_session_factory: async_sessionmaker[AsyncSession] | None = None
+
+
+def _get_session_factory() -> async_sessionmaker[AsyncSession]:
+    global _session_factory
+    if _session_factory is None:
+        _session_factory = async_sessionmaker(
+            bind=get_engine(),
+            class_=AsyncSession,
+            expire_on_commit=False,
+            autocommit=False,
+            autoflush=False,
+        )
+    return _session_factory
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    async with AsyncSessionLocal() as session:
+    async with _get_session_factory()() as session:
         try:
             yield session
             await session.commit()

@@ -6,7 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.responses import success_response
 from app.dependencies.database import get_db
-from app.schemas.category import CategoryCreate, CategoryListResponse, CategoryResponse, CategoryUpdate
+from app.schemas.category import (
+    CategoryCreate,
+    CategoryListResponse,
+    CategoryResponse,
+    CategoryUpdate,
+)
 from app.services.category_service import CategoryService
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
@@ -31,7 +36,7 @@ ServiceDep = Annotated[CategoryService, Depends(get_service)]
 async def list_categories(service: ServiceDep):
     result: CategoryListResponse = await service.list_categories()
     return success_response(
-        data=result.model_dump(),
+        data=result.model_dump(mode="json"),
         message="Categories retrieved successfully.",
     )
 
