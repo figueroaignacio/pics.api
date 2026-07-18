@@ -80,7 +80,7 @@ async def list_photos(
         search=search,
     )
     return success_response(
-        data=result.model_dump(),
+        data=result.model_dump(mode="json"),
         message="Photos retrieved successfully.",
     )
 
